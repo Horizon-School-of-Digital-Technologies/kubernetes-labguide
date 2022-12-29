@@ -78,7 +78,8 @@ kubectl config set-context --current --namespace=instavote
 
 ## PART II - ReplicaSets
 
-To understand how ReplicaSets works with the selectors  lets launch a pod in the new namespace with existing spec.
+To understand how ReplicaSets works with the selectors lets launch a pod in the new namespace with existing spec.
+We will use the config files from this repo [https://github.com/Horizon-School-of-Digital-Technologies/k8s-code](https://github.com/Horizon-School-of-Digital-Technologies/k8s-code)
 
 ```
 cd k8s-code/pods
