@@ -89,7 +89,7 @@ deployment "catalogue" created
 ```
 
 ```
-kubectl get deployment catalogue --export -o yaml
+kubectl get deployment catalogue -o yaml
 
 [...]
   strategy:
