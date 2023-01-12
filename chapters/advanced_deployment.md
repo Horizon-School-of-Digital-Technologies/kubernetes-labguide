@@ -52,27 +52,25 @@ Let us look at our catalogue deployment file,
 `File: catalogue-deploy.yml`
 
 ```
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalogue
-  namespace: instavote
   labels:
     app: catalogue
     env: dev
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: catalogue
+      env: dev
   template:
     metadata:
       labels:
         app: catalogue
         env: dev
     spec:
-      tolerations:
-        - key: "dedicate"
-          operator: "Equal"
-          value: "catalogue"
-          effect: "NoExecute"
       containers:
         - name: catalogue
           image: schoolofdevops/catalogue
