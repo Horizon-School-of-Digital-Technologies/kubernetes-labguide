@@ -19,7 +19,7 @@ Pre Reading :
 
 ## Deploy Database with a Persistent Volume Claim
 
-Lets begin by redeploying the db deployment, this time by configuring it to refer to the persistentVolumeClaim
+Lets use the [db deployment](https://github.com/Horizon-School-of-Digital-Technologies/k8s-code/blob/master/projects/instavote/dev/db-deploy.yaml), change the configuration by adding the persistentVolumeClaim info:
 
 `file: db-deploy-pvc.yaml`
 
@@ -64,12 +64,6 @@ We will call the terminal where you are running the above command as your **Moni
 
 
 ## Creating a Persistent Volume Claim
-
-switch to project directory
-
-```
-cd k8s-code/projects/instavote/dev/
-```
 
 Create the following file with the specs below
 
@@ -122,45 +116,10 @@ kubectl get pods
   * Do you see pvc bound to pv ?
   * Do you see the pod for db running ?
 
-Observe the dynamic provisioning, go to the host which is running nfs provisioner and look inside */srv* path to find the provisioned volume.
-
-
-### Troubleshooting NFS Provisioner 
-
-If you do not see the volume been provisioned despite creating storageclass, it may be due to a problem with API server configurations.  
-
-To find out if thats the case, check the logs for **nfs-provisioner** first. 
-
-
-```
-I0319 16:00:21.091140       1 controller.go:1052] scheduleOperation[lock-provision-instavote/db-pvc[06780d6b-a6d0-4701-bd72-faaa507b0e5a]]
-I0319 16:00:21.106978       1 leaderelection.go:154] attempting to acquire leader lease...
-I0319 16:00:21.121501       1 leaderelection.go:176] successfully acquired lease to provision for pvc instavote/db-pvc
-I0319 16:00:21.121686       1 controller.go:1052] scheduleOperation[provision-instavote/db-pvc[06780d6b-a6d0-4701-bd72-faaa507b0e5a]]
-E0319 16:00:21.155945       1 controller.go:751] Unexpected error getting claim reference to claim "instavote/db-pvc": selfLink was empty, can't make reference
-
-``` 
-If you see messages similar to above with error string containing `selfLink was empty`, you could fix it by updating API Server configurations.  
-
-To update API server configurations, update the pod spec that launches the API Server. 
-
-On the master node edit the file : ```/etc/kubernetes/manifests/kube-apiserver.yaml```
-
-and add ```- --feature-gates=RemoveSelfLink=false``` option the the command. An example is as below. 
-
-```
-  - command:
-    - kube-apiserver
-    - --advertise-address=143.198.50.211
-    - --allow-privileged=true
-    - --feature-gates=RemoveSelfLink=false
-```
-
-Once you make this change, save the file, wait for a minute or so and you shall see the volume provisioned. 
 
 ## Nano Project [Optional Exercise]
 
-Similar to postgres which mounts the data at /var/lib/postgresql/data and consumes it to store the database files, Redis creates and stores the file at **/data** path.  Your task is to have a nfs volume of size **200Mi** created and mounted at /data for the redis container.
+Similar to postgres which mounts the data at /var/lib/postgresql/data and consumes it to store the database files, Redis creates and stores the file at **/data** path.  Your task is to have a gp2 ebs volume of size **1Gi** created and mounted at /data for the redis container.
 
 You could follow these steps to complete this task
 
