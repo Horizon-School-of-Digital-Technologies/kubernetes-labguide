@@ -87,11 +87,11 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  storageClassName: nfs
+  storageClassName: gp2
 
 ```
 
-`if you are not using a Ubuntu bases setup described in the installation part of this guide, set  StorageClassName to "local-path" instead of "nfs" in the above file.`
+`if you are using your own cluster, make sure to use the right storage class.`
 
 create the Persistent Volume Claim and validate
 
@@ -109,40 +109,6 @@ kubectl get pvc,pv
   * Is persistentVolume created ?  Why ?
   * Is the persistentVolumeClaim bound with a persistentVolume ?
 
-
-## Set up Storage Provisioner in kubernetes
-
-Launch a local path provisioner using the following command,
-
-```
-kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
-
-```
-
-`Only if you are using the ubuntu based setup following installation part of this lab guide, proceed with creating NFS based storageclass, else skip this sub section and jump to validation steps`
-
-Change into nfs provisioner installation dir
-
-```
-cd k8s-code/storage
-```
-
-Deploy nfs-client provisioner.
-
-```
-kubectl apply -f nfs
-
-```
-
-This will create all the objects required to setup a nfs provisioner. At this time, you should also see **storageclass** created for nfs on your monitoring screen. It would be launched with  Statefulsets. [Read the official documentation on Statefulsets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) to understand how its differnt than deployments.
-
-
-```
-kubectl get storageclass
-kubectl get pods
-kubectl logs -f nfs-provisioner-0 -n storage
-
-```
 
 ### Validate
 
